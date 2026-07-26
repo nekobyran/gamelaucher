@@ -9,30 +9,26 @@ not a stable release and must not be redistributed.
   - Windows x64 current-user installer.
   - Installs to `%LOCALAPPDATA%\Programs\GameLauncher`.
   - Not Authenticode-signed; Windows SmartScreen may warn or block it.
-- `gamelaucher-android-stable-arm64-v8a-slim.apk`
-  - Android ARM64 launcher shell, package `org.github.gamelauncher.app`.
+- `gamelaucher-android-stable-full-engines-arm64-v8a.apk`
+  - Android ARM64 full-engine resource bundle, package
+    `org.github.gamelauncher.app`.
   - Version `1.0.0` (`versionCode 1`), `arm64-v8a` only.
-  - Signed with a debug certificate. It contains no DDLC game data and no
-    runnable Native Wine/full-engine runtime.
+  - Signed with a debug certificate. It contains packaged Wine, EasyRPG, and
+    DXVK 3.0.1 resources, but no DDLC or other built-in game data.
+  - The current runtime manifests still mark Native Wine and EasyRPG as not
+    runnable on Android. This asset is a full-resource preview, not proof of
+    Windows-game compatibility.
 
-SHA-256 values are provided in `checksums.txt` and as a Release asset.
+SHA-256 values are provided in `checksums-full-engines.txt` as a Release asset.
 
 ## Test Recordings
 
-- `GameLauncher-1.0.0-preview.1-android-arm64-mumu-test.mp4`
-  - MuMu slim APK replacement-install and first-launch diagnostic.
-  - The recording is playable, but MuMu reported an Activity launch timeout
-    and the recording session experienced a codec/device disconnect. It is not
-    proof of a successful sub-60-second first launch.
-- `GameLauncher-1.0.0-preview.1-android-arm64-cached-launch.mp4`
-  - MuMu cached-launch diagnostic. Measured command elapsed time was about
-    53.2 seconds, but Android returned `Status: timeout` / unknown launch state.
-- `mumu-full-engine-install-launch-candidate-not-released.mp4`
+- `mumu-full-engine-install-launch.mp4`
   - MuMu full-engine candidate install/cold-launch recording. Install succeeded
     and the Activity cold launch completed in about 38.1 seconds.
-  - The corresponding full-engine APK is intentionally not released because
-    the Native Wine runtime is not runnable yet. This video is not gameplay or
-    FPS evidence.
+  - The recording verifies installation and launcher Activity startup only.
+    The Native Wine runtime is not runnable yet, so this is not gameplay or FPS
+    evidence.
 
 All recordings are video-only diagnostics and are not performance-authority
 captures. They must not be used to claim real rendered FPS.
@@ -49,12 +45,14 @@ captures. They must not be used to claim real rendered FPS.
 - The DDLC V129 packaged runtime crashes under MuMu Houdini in `libextras.so`
   before a real game window appears. No DDLC V129 APK or game content is
   included in this Release.
-- No full-engine gameplay/package test video is claimed in this preview.
+- The full-resource APK does not yet have a successful full-engine gameplay or
+  game-packaging test video.
 
 ## Verified Packaging Scope
 
 - Windows stable bundle: release optimization checks `13/13`, slim bundle
   checks `16/16`; installer isolation smoke passed.
-- Android slim APK: APK Signature Scheme v2/v3 verification passed; only
-  `arm64-v8a`; no test games, nested APKs, DDLC data, or bundled game runtimes.
+- Android full-resource APK: full-engine route contract `33/33`; APK Signature
+  Scheme v2/v3 verification passed; only `arm64-v8a`; packaged Wine/EasyRPG/
+  DXVK resources are present, with no test games or DDLC data.
 - Video files were checked with `ffprobe` and SHA-256 before upload.
