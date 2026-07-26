@@ -1,6 +1,6 @@
 # GameLauncher 1.0.0 Preview 1
 
-This is a **private, draft, pre-release** build for controlled testing. It is
+This is a **private pre-release** build for controlled testing. It is
 not a stable release and must not be redistributed.
 
 ## Downloads
@@ -58,4 +58,3 @@ captures. They must not be used to claim real rendered FPS.
 - Android slim APK: APK Signature Scheme v2/v3 verification passed; only
   `arm64-v8a`; no test games, nested APKs, DDLC data, or bundled game runtimes.
 - Video files were checked with `ffprobe` and SHA-256 before upload.
-
