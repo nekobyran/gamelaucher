@@ -121,7 +121,7 @@ function Invoke-Build {
     Invoke-NativeChecked -FilePath $node -Arguments @(
         (Join-Path $RepoRoot 'tools\build-site.mjs'),
         $destination
-    )
+    ) | Out-Host
     if (-not (Test-Path -LiteralPath (Join-Path $destination 'release.json') -PathType Leaf)) {
         throw 'Generated GameLauncher release manifest is missing.'
     }
