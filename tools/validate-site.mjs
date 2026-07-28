@@ -8,7 +8,8 @@ const required = [
   'index.html', 'styles.css', 'app.js', 'release.json', 'site.config.json',
   '404.html', '_headers', '_redirects', '.nojekyll',
   'assets/brand-mark.svg', 'assets/favicon.svg', 'assets/og-cover.svg',
-  '.github/workflows/deploy-release-site.yml', 'command/Publish-StaticReleaseSite.ps1'
+  '.github/workflows/deploy-release-site.yml', 'command/Publish-StaticReleaseSite.ps1',
+  'worker.js', 'wrangler.worker.jsonc'
 ];
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
@@ -72,6 +73,7 @@ check(workflow.includes('CLOUDFLARE_API_TOKEN') && workflow.includes('CLOUDFLARE
 check(publishScript.includes('$expectedDomain'), 'domain format validation missing in publish script');
 check(publishScript.includes('tools\\build-site.mjs'), 'publish script must use the generated release manifest build');
 check(publishScript.includes('wrangler@latest'), 'Wrangler deployment entry missing');
+check(publishScript.includes("Join-Path $RepoRoot 'wrangler.worker.jsonc'"), 'custom-domain Worker deployment entry missing');
 check(buildScript.includes("['api', `repos/${config.githubRepo}/releases?per_page=20`]") && buildScript.includes('browser_download_url'), 'authenticated GitHub release discovery missing');
 check(buildScript.includes('draft !== true') && buildScript.includes('build-time-gh-fallback'), 'release discovery fail-closed policy missing');
 check(!/releases\/download\//iu.test(await readFile(resolve(root, 'release.json'), 'utf8')), 'source release template pins a fixed asset URL');

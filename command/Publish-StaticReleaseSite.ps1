@@ -183,6 +183,12 @@ function Invoke-Deploy {
         '--commit-dirty=true',
         '--commit-message', 'GameLauncher static release site'
     )
+    Invoke-Wrangler -Arguments @(
+        'deploy',
+        '--config', (Join-Path $RepoRoot 'wrangler.worker.jsonc'),
+        '--assets', $built,
+        '--message', 'GameLauncher public release site'
+    )
 }
 
 function Invoke-BindDomain {

@@ -17,6 +17,8 @@ on:
       - assets/**
       - tools/**
       - command/Publish-StaticReleaseSite.ps1
+      - worker.js
+      - wrangler.worker.jsonc
       - .github/workflows/deploy-release-site.yml
 
 permissions:
@@ -58,12 +60,7 @@ jobs:
             echo "Cloudflare deployment skipped because repository secrets are not configured."
           fi
 
-      - name: Deploy Cloudflare Pages
+      - name: Deploy Pages preview and production Worker
         if: steps.cloudflare.outputs.ready == 'true'
         shell: pwsh
         run: ./command/Publish-StaticReleaseSite.ps1 -Action Deploy -MainProjectRoot $PWD -OutputRoot "$PWD/dist" -Branch main
-
-      - name: Bind custom domain idempotently
-        if: steps.cloudflare.outputs.ready == 'true'
-        shell: pwsh
-        run: ./command/Publish-StaticReleaseSite.ps1 -Action BindDomain
