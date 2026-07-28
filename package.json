@@ -1,0 +1,15 @@
+{
+  "name": "gamelaucher-release-site",
+  "version": "1.0.0-preview.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node tools/validate-site.mjs",
+    "check": "node tools/validate-site.mjs && node --check app.js && node --check tools/serve.mjs && node --check tools/build-site.mjs",
+    "build": "node tools/build-site.mjs dist",
+    "serve": "node tools/serve.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "projectSlug": "gamelaucher",
+  "customDomain": "gamelaucher.nkbr.cc",
+  "pagesProject": "nkbr-gamelaucher",
+  "githubRepo": "nekobyran/gamelaucher",
+  "productionBranch": "main",
+  "outputDirectory": "release/gamelaucher_web/release"
+}

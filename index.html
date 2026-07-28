@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN" data-ready="false">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="GameLauncher 私有预览版发布页。跨平台启动、引擎资源与验证状态集中呈现。">
+  <meta property="og:title" content="GameLauncher · Private Preview">
+  <meta property="og:description" content="让游戏穿过平台。Windows 与 Android 私有预览发布。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/og-cover.svg">
+  <title>GameLauncher · Private Preview</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#release">跳到下载</a>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <header class="topbar" aria-label="主导航">
+    <a class="brand" href="#top" aria-label="GameLauncher 首页">
+      <img src="/assets/brand-mark.svg" alt="" width="36" height="36">
+      <span>GAME<span>LAUNCHER</span></span>
+    </a>
+    <div class="release-signal" aria-live="polite">
+      <i></i>
+      <span id="topStatus">PRIVATE PREVIEW</span>
+    </div>
+    <nav class="top-actions" aria-label="页面操作">
+      <a class="icon-button" id="githubLink" href="https://github.com/nekobyran/gamelaucher/releases" target="_blank" rel="noreferrer" aria-label="打开私有 GitHub Release" title="GitHub Release">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.88c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.55 9.55 0 0 1 12 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.77c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+      </a>
+      <button class="icon-button" id="motionToggle" type="button" aria-pressed="false" aria-label="切换动态效果" title="动态效果">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.66-5.66L20 8.68V3h-2v2.08A10 10 0 0 0 2 12h2Zm16 0a8 8 0 0 1-13.66 5.66L4 15.32V21h2v-2.08A10 10 0 0 0 22 12h-2Z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="top" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <p class="eyebrow reveal"><span></span><b id="releaseChannel">PRIVATE PREVIEW</b><em id="releaseIndex">01</em></p>
+        <h1 id="heroTitle" class="hero-title" aria-label="让游戏穿过平台">
+          <span>让游戏</span>
+          <span class="accent-line">穿过平台</span>
+        </h1>
+        <p class="hero-lead reveal">一个入口，连接原生引擎、Windows 游戏与多端设备。当前版本仅向受邀测试者开放。</p>
+        <div class="hero-actions reveal">
+          <a class="primary-action magnetic" id="heroDownload" href="#release">
+            <span id="heroDownloadLabel">查看预览版本</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12.17l-4.58-4.59L14 6l7 7-7 7-1.41-1.41L17.17 14H5v-2Z"/></svg>
+          </a>
+          <a class="secondary-action" href="#scope">
+            <span>验证边界</span><i aria-hidden="true"></i>
+          </a>
+        </div>
+        <dl class="hero-metrics reveal" aria-label="版本摘要">
+          <div><dt>VERSION</dt><dd id="heroVersion">—</dd></div>
+          <div><dt>PLATFORMS</dt><dd id="heroPlatforms">02</dd></div>
+          <div><dt>ACCESS</dt><dd>INVITE</dd></div>
+        </dl>
+      </div>
+
+      <div class="core-stage" id="coreStage" aria-label="跨平台设备视觉示意">
+        <div class="stage-halo" aria-hidden="true"></div>
+        <div class="orbit orbit-a" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="orbit orbit-b" aria-hidden="true"><i></i><i></i></div>
+        <div class="energy-core" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="device-stack" aria-hidden="true" data-active="windows">
+          <div class="device device-windows" data-device="windows">
+            <div class="window-bar"><i></i><i></i><i></i></div>
+            <div class="window-screen"><span class="window-logo"><i></i><i></i><i></i><i></i></span><b>WINDOWS</b></div>
+          </div>
+          <div class="device device-android" data-device="android">
+            <div class="phone-sensor"></div>
+            <div class="phone-screen"><span class="android-mark"><i></i><i></i></span><b>ANDROID</b></div>
+          </div>
+        </div>
+        <div class="orbit-label label-version"><span>BUILD</span><b id="stageVersion">—</b></div>
+        <div class="orbit-label label-engine"><span>CORE</span><b>MULTI ENGINE</b></div>
+        <p class="stage-caption"><span></span>LIVE RELEASE DATA</p>
+      </div>
+    </section>
+
+    <section class="release-section" id="release" aria-labelledby="releaseTitle">
+      <header class="section-heading reveal">
+        <p>01 / RELEASE</p>
+        <h2 id="releaseTitle">选择你的入口</h2>
+        <span>构建信息直接来自 <code>release.json</code></span>
+      </header>
+
+      <div class="platform-switch reveal" role="tablist" aria-label="选择平台">
+        <button type="button" role="tab" aria-selected="true" tabindex="0" data-platform="windows">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5.56 7.3-1.01v7.04H3V5.56Zm8.3-1.15L21 3v8.59h-9.7V4.41ZM3 12.59h7.3v7.05l-7.3-1v-6.05Zm8.3 0H21V21l-9.7-1.36v-7.05Z"/></svg><span>Windows</span><i></i>
+        </button>
+        <button type="button" role="tab" aria-selected="false" tabindex="-1" data-platform="android">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7.1 4.4-1.2-2.08.87-.5 1.23 2.12A8.8 8.8 0 0 1 12 3c1.43 0 2.79.34 4 .94l1.23-2.12.87.5-1.2 2.08A8.96 8.96 0 0 1 21 12H3a8.96 8.96 0 0 1 4.1-7.6ZM7.5 9A1.5 1.5 0 1 0 7.5 6a1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM3 13h18v6a2 2 0 0 1-2 2h-1v2h-2v-2H8v2H6v-2H5a2 2 0 0 1-2-2v-6Z"/></svg><span>Android</span><i></i>
+        </button>
+      </div>
+
+      <article class="release-panel reveal" role="tabpanel" aria-live="polite">
+        <div class="file-identity">
+          <span class="platform-glyph" id="platformGlyph">W</span>
+          <div><p id="platformStatus">READY FOR INVITED TESTERS</p><h3 id="platformTitle">Windows x64</h3><span id="platformFile">正在读取发布数据…</span></div>
+        </div>
+        <dl class="file-specs">
+          <div><dt>VERSION</dt><dd id="platformVersion">—</dd></div>
+          <div><dt>ARCH</dt><dd id="platformArch">—</dd></div>
+          <div><dt>PACKAGE</dt><dd id="platformPackage">—</dd></div>
+          <div><dt>ACCESS</dt><dd>PRIVATE</dd></div>
+        </dl>
+        <div class="checksum-row">
+          <div><span>SHA-256</span><code id="platformChecksum">—</code></div>
+          <button type="button" id="copyChecksum" aria-label="复制 SHA-256 校验值"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V3h13v13h-4v5H3V7h5Zm2 0h7v7h2V5h-9v2Zm5 2H5v10h10V9Z"/></svg><span>复制</span></button>
+        </div>
+        <div class="release-lower">
+          <div class="install-flow"><p>INSTALL FLOW</p><ol id="installSteps"></ol></div>
+          <div class="download-zone">
+            <p id="accessNotice">需要受邀 GitHub 账号登录后下载。</p>
+            <a class="download-action magnetic" id="downloadAction" href="https://github.com/nekobyran/gamelaucher/releases" target="_blank" rel="noreferrer"><span>前往私有 Release</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.17l3.59-3.58L17 11l-6 6-6-6 1.41-1.41L10 13.17V3h2Zm-7 16h14v2H5v-2Z"/></svg></a>
+          </div>
+        </div>
+      </article>
+      <p class="data-error" id="dataError" role="status" hidden>发布数据暂时不可用，请直接前往私有 GitHub Release。</p>
+    </section>
+
+    <section class="scope-section" id="scope" aria-labelledby="scopeTitle">
+      <header class="section-heading reveal"><p>02 / EVIDENCE</p><h2 id="scopeTitle">只展示被证明的部分</h2><span>预览版不会把资源存在误写成兼容性完成。</span></header>
+      <div class="evidence-layout">
+        <article class="verified-stream reveal"><div class="stream-title"><span>VERIFIED</span><i></i></div><ul id="verifiedList"></ul></article>
+        <article class="pending-stream reveal"><div class="stream-title"><span>PENDING</span><i></i></div><ul id="pendingList"></ul></article>
+      </div>
+    </section>
+
+    <section class="manifesto reveal" aria-label="项目宣言">
+      <p>ONE LIBRARY</p><h2>原生速度。<br><span>跨端边界。</span></h2>
+      <div><span>gamelaucher.nkbr.cc</span><i></i><span>PRIVATE PREVIEW</span></div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#top"><img src="/assets/brand-mark.svg" alt="" width="28" height="28"><span>GAME<span>LAUNCHER</span></span></a>
+    <p>下载内容托管于私有 GitHub Release。未经授权请勿分发。</p>
+    <a id="footerDomain" href="https://gamelaucher.nkbr.cc">gamelaucher.nkbr.cc</a>
+  </footer>
+</body>
+</html>
