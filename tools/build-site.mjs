@@ -74,7 +74,7 @@ function buildManifest() {
   manifest.release.discovery = 'build-time-gh-fallback';
   manifest.platforms = manifest.platforms.map((platform) => ({
     ...platform,
-    fileName: '由最新私有 Release 自动识别',
+    fileName: '由最新公开 Release 自动识别',
     sha256: '—',
     downloadUrl: null,
     statusLabel: 'AUTO DISCOVERY',

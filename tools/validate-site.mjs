@@ -59,7 +59,7 @@ for (const forbidden of ['PRIVATE PREVIEW', 'READY FOR INVITED TESTERS', 'verifi
   check(!html.includes(forbidden) && !js.includes(forbidden), `internal preview/testing marker remains: ${forbidden}`);
 }
 check(html.includes('LICENSE NOT DECLARED'), 'license boundary is missing');
-check(html.includes('https://github.com/nekobyran/gamelaucher'), 'private repository link is missing');
+check(html.includes('https://github.com/nekobyran/gamelaucher'), 'public repository link is missing');
 check(js.includes('visibilitychange'), 'animation must pause when the page is hidden');
 check(js.includes('prefers-reduced-motion'), 'reduced-motion JavaScript handling missing');
 check(js.includes('saveData') && js.includes('navigator.connection'), 'save-data motion fallback missing');
@@ -73,7 +73,7 @@ check(publishScript.includes('$expectedDomain'), 'domain format validation missi
 check(publishScript.includes('tools\\build-site.mjs'), 'publish script must use the generated release manifest build');
 check(publishScript.includes('wrangler@latest'), 'Wrangler deployment entry missing');
 check(buildScript.includes("['api', `repos/${config.githubRepo}/releases?per_page=20`]") && buildScript.includes('browser_download_url'), 'authenticated GitHub release discovery missing');
-check(buildScript.includes('draft !== true') && buildScript.includes('build-time-gh-fallback'), 'private release fail-closed policy missing');
+check(buildScript.includes('draft !== true') && buildScript.includes('build-time-gh-fallback'), 'release discovery fail-closed policy missing');
 check(!/releases\/download\//iu.test(await readFile(resolve(root, 'release.json'), 'utf8')), 'source release template pins a fixed asset URL');
 
 const sensitivePrefix = /(ghp_|github_pat_|sk-[A-Za-z0-9]{20,})/;

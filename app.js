@@ -76,7 +76,7 @@
 
   function renderRelease() {
     const { config, release } = state;
-    document.title = `${release.release.productName} · Private Release`;
+    document.title = `${release.release.productName} · ${release.release.channel}`;
     setText('#topStatus', release.release.channel.toUpperCase());
     setText('#releaseChannel', release.release.channel.toUpperCase());
     setText('#releaseIndex', release.release.sequence);
@@ -296,7 +296,7 @@
       const errorMessage = $('#dataError');
       if (errorMessage) errorMessage.hidden = false;
       setText('#platformStatus', 'RELEASE DATA UNAVAILABLE');
-      setText('#platformFile', '请直接前往私有 GitHub Release');
+      setText('#platformFile', '请直接前往公开 GitHub Release');
     } finally {
       setupInteractions();
       setupMotionControl();
