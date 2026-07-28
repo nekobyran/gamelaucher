@@ -110,7 +110,7 @@ function Invoke-Validation {
 function Invoke-Build {
     param([Parameter(Mandatory)]$Config)
 
-    Invoke-Validation
+    Invoke-Validation | Out-Host
     $destination = if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
         Join-Path $MainProjectRoot ($Config.outputDirectory -replace '/', '\')
     } else {
@@ -154,10 +154,28 @@ function Ensure-PagesProject {
 
     $raw = Invoke-Wrangler -Arguments @('pages', 'project', 'list', '--json') -Capture
     $jsonText = $raw -join [Environment]::NewLine
-    $parsed = $jsonText | ConvertFrom-Json
-    $projects = if ($parsed.PSObject.Properties.Name -contains 'result') { @($parsed.result) } else { @($parsed) }
+    $parsed = if ([string]::IsNullOrWhiteSpace($jsonText)) { $null } else { $jsonText | ConvertFrom-Json }
+    $projects = if ($null -eq $parsed) {
+        @()
+    } elseif ($parsed -is [System.Array]) {
+        @($parsed)
+    } elseif ($parsed.PSObject.Properties.Match('result').Count -gt 0) {
+        @($parsed.result)
+    } else {
+        @($parsed)
+    }
 
-    if ($projects | Where-Object { $_.name -eq $Config.pagesProject }) {
+    $matchingProject = $projects | Where-Object {
+        $projectName = if ($_.PSObject.Properties.Name -contains 'name') {
+            [string]$_.name
+        } elseif ($_.PSObject.Properties.Name -contains 'Project Name') {
+            [string]$_.'Project Name'
+        } else {
+            ''
+        }
+        $projectName -eq $Config.pagesProject
+    }
+    if ($matchingProject) {
         Write-Host "Cloudflare Pages project already exists: $($Config.pagesProject)"
         return
     }
@@ -178,6 +196,7 @@ function Invoke-Deploy {
         'pages', 'deploy', $built,
         '--project-name', $Config.pagesProject,
         '--branch', $Branch,
+        '--commit-dirty=true',
         '--commit-message', 'GameLauncher static release site'
     )
 }
