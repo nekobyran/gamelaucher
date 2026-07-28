@@ -43,12 +43,20 @@ check(release.platforms.some((item) => item.id === 'windows'), 'Windows build mi
 check(release.platforms.some((item) => item.id === 'android'), 'Android build missing');
 
 for (const platform of release.platforms) {
-  check(platform.sha256 === '—', `${platform.id}: source template must not pin a stale SHA-256`);
-  check(platform.downloadUrl === null, `${platform.id}: source template must not pin a release asset URL`);
+  check(/^[A-F0-9]{64}$/.test(platform.sha256), `${platform.id}: source release SHA-256 is invalid`);
+  check(
+    typeof platform.downloadUrl === 'string'
+      && platform.downloadUrl.startsWith('https://github.com/nekobyran/gamelaucher/releases/download/'),
+    `${platform.id}: source release asset URL is invalid`,
+  );
+  check(
+    platform.downloadUrl?.endsWith(`/${platform.fileName}`),
+    `${platform.id}: source release file name and URL differ`,
+  );
   check(Array.isArray(platform.installSteps) && platform.installSteps.length >= 3, `${platform.id}: installSteps incomplete`);
 }
-check(release.release.releasePageUrl === 'https://github.com/nekobyran/gamelaucher/releases', 'source release fallback must target the repository Releases page');
-check(release.release.discovery === 'build-time-gh', 'source release discovery contract is missing');
+check(release.release.releasePageUrl.startsWith('https://github.com/nekobyran/gamelaucher/releases/tag/'), 'source release page must target a published tag');
+check(release.release.discovery === 'source-pinned-public-release', 'source release fallback contract is missing');
 
 for (const id of ['starfield', 'motionToggle', 'release', 'scope', 'platformChecksum']) {
   check(html.includes(`id="${id}"`), `required DOM id missing: ${id}`);
@@ -56,11 +64,13 @@ for (const id of ['starfield', 'motionToggle', 'release', 'scope', 'platformChec
 check(html.includes('aria-live="polite"'), 'live release status missing');
 check(!/<script[^>]+src=["']https?:/i.test(html), 'remote scripts are forbidden');
 check(!/<link[^>]+href=["']https?:/i.test(html), 'remote styles and fonts are forbidden');
-for (const forbidden of ['PRIVATE PREVIEW', 'READY FOR INVITED TESTERS', 'verifiedList', 'pendingList', 'smoke', '受邀测试者']) {
+for (const forbidden of ['PRIVATE PREVIEW', 'PUBLIC PREVIEW', 'Public Preview', '公开预览版', 'READY FOR INVITED TESTERS', 'verifiedList', 'pendingList', 'smoke', '受邀测试者']) {
   check(!html.includes(forbidden) && !js.includes(forbidden), `internal preview/testing marker remains: ${forbidden}`);
 }
 check(html.includes('LICENSE NOT DECLARED'), 'license boundary is missing');
 check(html.includes('https://github.com/nekobyran/gamelaucher'), 'public repository link is missing');
+check(html.includes('<meta name="theme-color" content="#edf4df">') && html.includes('<meta name="color-scheme" content="light">'), 'paper-white browser chrome metadata is missing');
+check(html.includes('GameLauncher · Release Portal') && !html.includes('Public Preview'), 'formal release portal title is missing');
 check(js.includes('visibilitychange'), 'animation must pause when the page is hidden');
 check(js.includes('prefers-reduced-motion'), 'reduced-motion JavaScript handling missing');
 check(js.includes('saveData') && js.includes('navigator.connection'), 'save-data motion fallback missing');
@@ -75,8 +85,8 @@ check(publishScript.includes('tools\\build-site.mjs'), 'publish script must use 
 check(publishScript.includes('wrangler@latest'), 'Wrangler deployment entry missing');
 check(publishScript.includes("Join-Path $RepoRoot 'wrangler.worker.jsonc'"), 'custom-domain Worker deployment entry missing');
 check(buildScript.includes("['api', `repos/${config.githubRepo}/releases?per_page=20`]") && buildScript.includes('browser_download_url'), 'authenticated GitHub release discovery missing');
-check(buildScript.includes('draft !== true') && buildScript.includes('build-time-gh-fallback'), 'release discovery fail-closed policy missing');
-check(!/releases\/download\//iu.test(await readFile(resolve(root, 'release.json'), 'utf8')), 'source release template pins a fixed asset URL');
+check(buildScript.includes('draft !== true') && buildScript.includes('source-pinned-fallback'), 'release discovery fail-closed policy missing');
+check(buildScript.includes("latest.prerelease ? 'Public Prerelease' : 'Public Release'") && !buildScript.includes("'Public Preview'"), 'formal prerelease channel normalization missing');
 
 const sensitivePrefix = /(ghp_|github_pat_|sk-[A-Za-z0-9]{20,})/;
 for (const [name, text] of [['index.html', html], ['app.js', js], ['workflow', workflow], ['publish script', publishScript]]) {

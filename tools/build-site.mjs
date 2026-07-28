@@ -70,16 +70,7 @@ function authenticatedLatestRelease() {
 
 function buildManifest() {
   const manifest = structuredClone(template);
-  manifest.release.releasePageUrl = releaseRoot;
-  manifest.release.discovery = 'build-time-gh-fallback';
-  manifest.platforms = manifest.platforms.map((platform) => ({
-    ...platform,
-    fileName: '由最新公开 Release 自动识别',
-    sha256: '—',
-    downloadUrl: null,
-    statusLabel: 'AUTO DISCOVERY',
-    actionLabel: '打开最新 Release',
-  }));
+  manifest.release.discovery = 'source-pinned-fallback';
 
   const latest = authenticatedLatestRelease();
   if (!latest) return manifest;
@@ -88,10 +79,10 @@ function buildManifest() {
   const releaseUrl = String(latest.html_url || releaseRoot);
   if (!releaseUrl.startsWith(`${releaseRoot}/`)) return manifest;
 
-  manifest.release.displayName = String(latest.name || tag || 'Latest authorized release');
+  manifest.release.displayName = `${manifest.release.productName} ${tag.replace(/^v/iu, '') || 'latest'}`;
   manifest.release.version = tag.replace(/^v/iu, '') || 'latest';
   manifest.release.sequence = 'AUTO';
-  manifest.release.channel = latest.prerelease ? 'Public Preview' : 'Public Release';
+  manifest.release.channel = latest.prerelease ? 'Public Prerelease' : 'Public Release';
   manifest.release.visibility = 'public';
   manifest.release.accessNotice = '公开发布；下载后请先核对 SHA-256。';
   manifest.release.publishedAt = String(latest.published_at || latest.created_at || '').slice(0, 10) || null;

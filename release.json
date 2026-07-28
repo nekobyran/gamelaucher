@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "release": {
     "productName": "GameLauncher",
-    "displayName": "GameLauncher 1.1.0 Public Preview",
+    "displayName": "GameLauncher 1.1.0-preview.1",
     "version": "1.1.0-preview.1",
-    "sequence": "03",
-    "channel": "Public Preview",
-    "publishedAt": "2026-07-29",
+    "sequence": "AUTO",
+    "channel": "Public Prerelease",
+    "publishedAt": "2026-07-28",
     "visibility": "public",
-    "releasePageUrl": "https://github.com/nekobyran/gamelaucher/releases",
-    "discovery": "build-time-gh",
-    "accessNotice": "公开预览版；下载后请先核对 SHA-256。"
+    "releasePageUrl": "https://github.com/nekobyran/gamelaucher/releases/tag/v1.1.0-preview.1",
+    "discovery": "source-pinned-public-release",
+    "accessNotice": "公开发布；下载后请先核对 SHA-256。"
   },
   "platforms": [
     {
@@ -18,13 +18,13 @@
       "glyph": "W",
       "shortLabel": "Windows",
       "title": "Windows x64 安装版",
-      "statusLabel": "AUTO DISCOVERY",
-      "fileName": "由最新公开 Release 自动识别",
+      "statusLabel": "AUTHORIZED RELEASE",
+      "fileName": "GameLauncher-1.1.0-preview.1-windows-x64-setup.exe",
       "architecture": "x86_64",
       "packageType": "CURRENT-USER SETUP",
-      "sha256": "—",
-      "downloadUrl": null,
-      "actionLabel": "打开最新 Release",
+      "sha256": "F5A522585682EE9CE6B61BCB1DA2A8DB02C1BF53177991FD7E7B5AD9F0A11DC5",
+      "downloadUrl": "https://github.com/nekobyran/gamelaucher/releases/download/v1.1.0-preview.1/GameLauncher-1.1.0-preview.1-windows-x64-setup.exe",
+      "actionLabel": "获取 Windows 版本",
       "installSteps": [
         "下载当前用户安装包并核对 SHA-256",
         "运行安装包；不需要管理员权限",
@@ -39,21 +39,20 @@
       "glyph": "A",
       "shortLabel": "Android",
       "title": "Android ARM64",
-      "statusLabel": "AUTO DISCOVERY",
-      "fileName": "由最新公开 Release 自动识别",
+      "statusLabel": "AUTHORIZED RELEASE",
+      "fileName": "gamelaucher-android-stable.apk",
       "architecture": "arm64-v8a",
       "packageType": "THIN LAUNCHER APK",
-      "sha256": "—",
-      "downloadUrl": null,
-      "actionLabel": "打开最新 Release",
+      "sha256": "32DDA3ADDCB639B34F5548A80E5409A0FAA70F2535B7E8F65A46F78A5CC70DB2",
+      "downloadUrl": "https://github.com/nekobyran/gamelaucher/releases/download/v1.1.0-preview.1/gamelaucher-android-stable.apk",
+      "actionLabel": "获取 Android 版本",
       "installSteps": [
         "下载 ARM64 APK 并核对 SHA-256",
         "允许受信任来源安装",
         "首次启动选择引擎；引擎文件按 ABI 后台下载"
       ],
       "limitations": [
-        "尚无 ARM64 真机端到端游戏启动证据",
-        "EasyRPG Android 引擎因当前源码依赖不可复现而暂不提供"
+        "Android 可用引擎范围以当前 GitHub Release 说明为准"
       ]
     }
   ]
