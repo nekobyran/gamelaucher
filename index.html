@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080b12">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="GameLauncher 私有预览版发布页。跨平台启动、引擎资源与验证状态集中呈现。">
-  <meta property="og:title" content="GameLauncher · Private Preview">
-  <meta property="og:description" content="让游戏穿过平台。Windows 与 Android 私有预览发布。">
+  <meta name="description" content="GameLauncher 私有发布页。跨平台启动、引擎资源与版本信息集中呈现。">
+  <meta property="og:title" content="GameLauncher · Private Release">
+  <meta property="og:description" content="让游戏穿过平台。Windows 与 Android 私有发布。">
   <meta property="og:type" content="website">
   <meta property="og:image" content="/assets/og-cover.svg">
-  <title>GameLauncher · Private Preview</title>
+  <title>GameLauncher · Private Release</title>
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
   <script src="/app.js" defer></script>
@@ -29,7 +29,7 @@
     </a>
     <div class="release-signal" aria-live="polite">
       <i></i>
-      <span id="topStatus">PRIVATE PREVIEW</span>
+      <span id="topStatus">PRIVATE RELEASE</span>
     </div>
     <nav class="top-actions" aria-label="页面操作">
       <a class="icon-button" id="githubLink" href="https://github.com/nekobyran/gamelaucher/releases" target="_blank" rel="noreferrer" aria-label="打开私有 GitHub Release" title="GitHub Release">
@@ -44,19 +44,19 @@
   <main>
     <section class="hero" id="top" aria-labelledby="heroTitle">
       <div class="hero-copy">
-        <p class="eyebrow reveal"><span></span><b id="releaseChannel">PRIVATE PREVIEW</b><em id="releaseIndex">01</em></p>
+        <p class="eyebrow reveal"><span></span><b id="releaseChannel">PRIVATE RELEASE</b><em id="releaseIndex">01</em></p>
         <h1 id="heroTitle" class="hero-title" aria-label="让游戏穿过平台">
           <span>让游戏</span>
           <span class="accent-line">穿过平台</span>
         </h1>
-        <p class="hero-lead reveal">一个入口，连接原生引擎、Windows 游戏与多端设备。当前版本仅向受邀测试者开放。</p>
+        <p class="hero-lead reveal">一个入口，连接原生引擎、Windows 游戏与多端设备。当前版本仅向已授权仓库成员开放。</p>
         <div class="hero-actions reveal">
           <a class="primary-action magnetic" id="heroDownload" href="#release">
-            <span id="heroDownloadLabel">查看预览版本</span>
+            <span id="heroDownloadLabel">查看当前版本</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12.17l-4.58-4.59L14 6l7 7-7 7-1.41-1.41L17.17 14H5v-2Z"/></svg>
           </a>
           <a class="secondary-action" href="#scope">
-            <span>验证边界</span><i aria-hidden="true"></i>
+            <span>访问边界</span><i aria-hidden="true"></i>
           </a>
         </div>
         <dl class="hero-metrics reveal" aria-label="版本摘要">
@@ -106,7 +106,7 @@
       <article class="release-panel reveal" role="tabpanel" aria-live="polite">
         <div class="file-identity">
           <span class="platform-glyph" id="platformGlyph">W</span>
-          <div><p id="platformStatus">READY FOR INVITED TESTERS</p><h3 id="platformTitle">Windows x64</h3><span id="platformFile">正在读取发布数据…</span></div>
+          <div><p id="platformStatus">AUTHORIZED RELEASE</p><h3 id="platformTitle">Windows x64</h3><span id="platformFile">正在读取发布数据…</span></div>
         </div>
         <dl class="file-specs">
           <div><dt>VERSION</dt><dd id="platformVersion">—</dd></div>
@@ -130,23 +130,38 @@
     </section>
 
     <section class="scope-section" id="scope" aria-labelledby="scopeTitle">
-      <header class="section-heading reveal"><p>02 / EVIDENCE</p><h2 id="scopeTitle">只展示被证明的部分</h2><span>预览版不会把资源存在误写成兼容性完成。</span></header>
-      <div class="evidence-layout">
-        <article class="verified-stream reveal"><div class="stream-title"><span>VERIFIED</span><i></i></div><ul id="verifiedList"></ul></article>
-        <article class="pending-stream reveal"><div class="stream-title"><span>PENDING</span><i></i></div><ul id="pendingList"></ul></article>
+      <header class="section-heading reveal"><p>02 / BOUNDARY</p><h2 id="scopeTitle">私有分发，清晰边界。</h2><span>版本清单在构建与发布阶段生成，浏览器不接触 GitHub 凭据。</span></header>
+      <div class="release-boundary reveal">
+        <p>仓库仅对授权协作者开放。当前项目未在仓库顶层声明独立许可证，因此不作为开源软件宣传；发行文件不得在授权范围外再分发。</p>
+        <div><a href="https://github.com/nekobyran/gamelaucher" target="_blank" rel="noreferrer">Private repository ↗</a><span>LICENSE NOT DECLARED</span></div>
       </div>
     </section>
 
     <section class="manifesto reveal" aria-label="项目宣言">
       <p>ONE LIBRARY</p><h2>原生速度。<br><span>跨端边界。</span></h2>
-      <div><span>gamelaucher.nkbr.cc</span><i></i><span>PRIVATE PREVIEW</span></div>
+      <div><span>gamelauncher.nkbr.cc</span><i></i><span>PRIVATE RELEASE</span></div>
+    </section>
+  
+
+    <section id="support" class="nkbr-support" aria-labelledby="nkbr-support-title">
+      <div class="nkbr-support__copy">
+        <p class="nkbr-support__eyebrow">SUPPORT · NKBR</p>
+        <h2 id="nkbr-support-title">让项目继续生长。</h2>
+        <p>赞助完全自愿，与下载、仓库权限、功能更新和技术支持无绑定。所有 NKBR 发布页统一使用根站同一张赞助二维码。</p>
+        <a href="https://nkbr.cc/#support">查看根站支持说明 ↗</a>
+      </div>
+      <figure class="nkbr-support__code">
+        <span class="nkbr-support__orbit" aria-hidden="true"><i></i></span>
+        <img src="./assets/sponsor.jpg" width="641" height="638" loading="lazy" decoding="async" alt="NKBR 项目赞助二维码">
+        <figcaption>SPONSOR · NKBR</figcaption>
+      </figure>
     </section>
   </main>
 
   <footer>
     <a class="brand footer-brand" href="#top"><img src="/assets/brand-mark.svg" alt="" width="28" height="28"><span>GAME<span>LAUNCHER</span></span></a>
     <p>下载内容托管于私有 GitHub Release。未经授权请勿分发。</p>
-    <a id="footerDomain" href="https://gamelaucher.nkbr.cc">gamelaucher.nkbr.cc</a>
+    <a id="footerDomain" href="https://gamelauncher.nkbr.cc">gamelauncher.nkbr.cc</a>
   </footer>
 </body>
 </html>

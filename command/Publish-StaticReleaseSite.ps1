@@ -117,32 +117,16 @@ function Invoke-Build {
         [IO.Path]::GetFullPath($OutputRoot)
     }
 
-    $staging = Join-Path ([IO.Path]::GetTempPath()) "gamelaucher-site-$([Guid]::NewGuid().ToString('N'))"
-    New-Item -ItemType Directory -Path $staging -Force | Out-Null
-
-    try {
-        $files = @(
-            'index.html', 'styles.css', 'app.js', 'release.json', 'site.config.json',
-            '404.html', '_headers', '_redirects', '.nojekyll'
-        )
-        foreach ($file in $files) {
-            Copy-Item -LiteralPath (Join-Path $RepoRoot $file) -Destination (Join-Path $staging $file) -Force
-        }
-        Copy-Item -LiteralPath (Join-Path $RepoRoot 'assets') -Destination (Join-Path $staging 'assets') -Recurse -Force
-
-        $parent = Split-Path -Parent $destination
-        New-Item -ItemType Directory -Path $parent -Force | Out-Null
-        if (Test-Path -LiteralPath $destination) {
-            Remove-Item -LiteralPath $destination -Recurse -Force
-        }
-        Move-Item -LiteralPath $staging -Destination $destination
-        Write-Host "Static site built: $destination"
-        return $destination
-    } finally {
-        if (Test-Path -LiteralPath $staging) {
-            Remove-Item -LiteralPath $staging -Recurse -Force
-        }
+    $node = Get-NodeProgram -Name node
+    Invoke-NativeChecked -FilePath $node -Arguments @(
+        (Join-Path $RepoRoot 'tools\build-site.mjs'),
+        $destination
+    )
+    if (-not (Test-Path -LiteralPath (Join-Path $destination 'release.json') -PathType Leaf)) {
+        throw 'Generated GameLauncher release manifest is missing.'
     }
+    Write-Host "Static site built: $destination"
+    return $destination
 }
 
 function Confirm-WranglerIdentity {

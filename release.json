@@ -2,35 +2,36 @@
   "schemaVersion": 1,
   "release": {
     "productName": "GameLauncher",
-    "displayName": "GameLauncher 1.0.0 Preview 2",
-    "version": "1.0.0-preview.2",
-    "sequence": "02",
-    "channel": "Private Preview",
-    "publishedAt": "2026-07-28",
-    "visibility": "private",
-    "releasePageUrl": "https://github.com/nekobyran/gamelaucher/releases/tag/v1.0.0-preview.2",
-    "accessNotice": "需要受邀 GitHub 账号登录后下载。"
+    "displayName": "GameLauncher 1.1.0 Public Preview",
+    "version": "1.1.0-preview.1",
+    "sequence": "03",
+    "channel": "Public Preview",
+    "publishedAt": "2026-07-29",
+    "visibility": "public",
+    "releasePageUrl": "https://github.com/nekobyran/gamelaucher/releases",
+    "discovery": "build-time-gh",
+    "accessNotice": "公开预览版；下载后请先核对 SHA-256。"
   },
   "platforms": [
     {
       "id": "windows",
       "glyph": "W",
       "shortLabel": "Windows",
-      "title": "Windows x64",
-      "statusLabel": "READY FOR INVITED TESTERS",
-      "fileName": "GameLauncher-1.0.0-preview.2-windows-x64-setup.exe",
+      "title": "Windows x64 安装版",
+      "statusLabel": "AUTO DISCOVERY",
+      "fileName": "由最新公开 Release 自动识别",
       "architecture": "x86_64",
-      "packageType": "USER SETUP",
-      "sha256": "7AC3055B60E0D26C9C606812C835DAAA7B3C7093A9F2F60F935F5978EFA86CAD",
-      "downloadUrl": "https://github.com/nekobyran/gamelaucher/releases/download/v1.0.0-preview.2/GameLauncher-1.0.0-preview.2-windows-x64-setup.exe",
-      "actionLabel": "获取 Windows 版本",
+      "packageType": "CURRENT-USER SETUP",
+      "sha256": "—",
+      "downloadUrl": null,
+      "actionLabel": "打开最新 Release",
       "installSteps": [
-        "登录受邀 GitHub 账号并打开 Release",
-        "下载 Windows x64 当前用户安装包",
-        "核对 SHA-256 后运行安装程序"
+        "下载当前用户安装包并核对 SHA-256",
+        "运行安装包；不需要管理员权限",
+        "首次启动选择所需引擎，下载在主页后台继续"
       ],
       "limitations": [
-        "安装包尚未进行 Authenticode 签名，Windows SmartScreen 可能显示警告。"
+        "安装包未使用受信任 Authenticode 证书，SmartScreen 可能警告"
       ]
     },
     {
@@ -38,38 +39,22 @@
       "glyph": "A",
       "shortLabel": "Android",
       "title": "Android ARM64",
-      "statusLabel": "FULL-RESOURCE PREVIEW",
-      "fileName": "gamelaucher-android-stable-full-engines-arm64-v8a.apk",
+      "statusLabel": "AUTO DISCOVERY",
+      "fileName": "由最新公开 Release 自动识别",
       "architecture": "arm64-v8a",
-      "packageType": "FULL ENGINE APK",
-      "sha256": "63E0AAED587D85A924FFC63B2F09B1C88714DF1535CB09A3DA0AC887282DD2D4",
-      "downloadUrl": "https://github.com/nekobyran/gamelaucher/releases/download/v1.0.0-preview.2/gamelaucher-android-stable-full-engines-arm64-v8a.apk",
-      "actionLabel": "获取 Android 版本",
+      "packageType": "THIN LAUNCHER APK",
+      "sha256": "—",
+      "downloadUrl": null,
+      "actionLabel": "打开最新 Release",
       "installSteps": [
-        "登录受邀 GitHub 账号并下载 ARM64 APK",
-        "核对 SHA-256 并允许受信任来源安装",
-        "仅验证启动器入口，不将资源存在视为游戏兼容性"
+        "下载 ARM64 APK 并核对 SHA-256",
+        "允许受信任来源安装",
+        "首次启动选择引擎；引擎文件按 ABI 后台下载"
       ],
       "limitations": [
-        "该 APK 使用调试证书签名。",
-        "Native Wine 与 EasyRPG 的 Android 可运行状态尚未完成验证。"
+        "尚无 ARM64 真机端到端游戏启动证据",
+        "EasyRPG Android 引擎因当前源码依赖不可复现而暂不提供"
       ]
     }
-  ],
-  "verification": {
-    "verified": [
-      "三个优先兼容性测试套件合计 49/49 通过。",
-      "Windows x64 release 构建与 Preview 2 当前用户安装包隔离 smoke 通过。",
-      "Android release 版本为 1.0.0（versionCode 2）。",
-      "Android APK Signature Scheme v2/v3 校验通过，仅包含 arm64-v8a。",
-      "APK 内存在 Wine、EasyRPG 与 DXVK 3.0.1 资源，且不包含 DDLC 或其他内置游戏数据。"
-    ],
-    "pending": [
-      "Huawei 实机：DDLC 60 秒内启动、至少 110 个真实 presented FPS、IME 输入、真全屏与侧边黑边消除仍待验证。",
-      "帧插值与超分辨率尚未在真实游戏画面中证明已生效。",
-      "MuMu 测试环境为 60 Hz，不能证明 110/120 FPS 实体屏目标。",
-      "全资源 APK 尚无成功的全引擎游戏运行或游戏打包视频证据。",
-      "资源已打包不等于 Windows 游戏兼容性已经完成。"
-    ]
-  }
+  ]
 }

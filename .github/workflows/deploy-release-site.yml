@@ -23,7 +23,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: gamelaucher-release-site-production
+  group: gamelauncher-release-site-production
   cancel-in-progress: true
 
 jobs:

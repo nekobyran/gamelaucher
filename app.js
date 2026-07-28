@@ -5,6 +5,9 @@
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const state = { config: null, release: null, platform: 'windows', motion: true };
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const saveData = connection?.saveData === true;
+  const lowPower = saveData || Number(navigator.hardwareConcurrency || 8) <= 4 || Number(navigator.deviceMemory || 8) <= 4;
 
   const setText = (selector, value) => {
     const element = $(selector);
@@ -68,12 +71,12 @@
       const label = $('span', download);
       if (label) label.textContent = platform.actionLabel;
     }
-    setText('#heroDownloadLabel', `${platform.shortLabel} 预览版`);
+    setText('#heroDownloadLabel', `${platform.shortLabel} 当前版本`);
   }
 
   function renderRelease() {
     const { config, release } = state;
-    document.title = `${release.release.productName} · ${release.release.channel}`;
+    document.title = `${release.release.productName} · Private Release`;
     setText('#topStatus', release.release.channel.toUpperCase());
     setText('#releaseChannel', release.release.channel.toUpperCase());
     setText('#releaseIndex', release.release.sequence);
@@ -87,8 +90,6 @@
     const githubLink = $('#githubLink');
     if (githubLink) githubLink.href = release.release.releasePageUrl;
 
-    renderList('#verifiedList', release.verification.verified);
-    renderList('#pendingList', release.verification.pending);
     selectPlatform(state.platform);
   }
 
@@ -131,14 +132,25 @@
 
     $('#copyChecksum')?.addEventListener('click', copyChecksum);
 
-    const revealObserver = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
-      }
-    }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
-    $$('.reveal').forEach((element) => revealObserver.observe(element));
+    const revealItems = [...document.querySelectorAll('.reveal')];
+    const revealAll = () => revealItems.forEach((element) => element.classList.add('is-visible'));
+    if ('IntersectionObserver' in window && state.motion) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
+      document.documentElement.classList.add('reveal-enhanced');
+      revealItems.forEach((element) => revealObserver.observe(element));
+      setTimeout(() => {
+        revealAll();
+        revealObserver.disconnect();
+      }, 900);
+    } else {
+      revealAll();
+    }
 
     if (matchMedia('(pointer:fine)').matches) {
       document.body.classList.add('has-pointer');
@@ -176,15 +188,16 @@
   }
 
   function setMotion(enabled) {
-    state.motion = enabled && !reducedMotion.matches;
+    state.motion = enabled && !reducedMotion.matches && !saveData;
     document.body.classList.toggle('motion-off', !state.motion);
     $('#motionToggle')?.setAttribute('aria-pressed', String(!state.motion));
-    localStorage.setItem('gamelaucher-motion', state.motion ? 'on' : 'off');
+    try { localStorage.setItem('gamelaucher-motion', state.motion ? 'on' : 'off'); } catch {}
     dispatchEvent(new CustomEvent('gamelaucher:motion', { detail: state.motion }));
   }
 
   function setupMotionControl() {
-    const stored = localStorage.getItem('gamelaucher-motion');
+    let stored = null;
+    try { stored = localStorage.getItem('gamelaucher-motion'); } catch {}
     setMotion(stored !== 'off');
     $('#motionToggle')?.addEventListener('click', () => setMotion(!state.motion));
     reducedMotion.addEventListener('change', () => setMotion(state.motion));
@@ -217,13 +230,13 @@
     function resize() {
       width = innerWidth;
       height = innerHeight;
-      dpr = Math.min(devicePixelRatio || 1, width < 720 ? 1.25 : 1.8);
+      dpr = Math.min(devicePixelRatio || 1, lowPower ? 1 : (width < 720 ? 1.25 : 1.8));
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(width < 720 ? 34 : 76, Math.max(24, Math.floor((width * height) / 23000)));
+      const count = lowPower ? 18 : Math.min(width < 720 ? 34 : 76, Math.max(24, Math.floor((width * height) / 23000)));
       particles = Array.from({ length: count }, createParticle);
     }
 
@@ -244,7 +257,7 @@
         const x = centerX + Math.cos(particle.angle) * particle.radius;
         const y = centerY + Math.sin(particle.angle) * particle.radius * 0.48;
         if (x < -20 || x > width + 20 || y < -20 || y > height + 20) continue;
-        const tint = particle.tint > 0.82 ? '200,184,255' : particle.tint < 0.16 ? '167,255,209' : '135,220,255';
+        const tint = particle.tint > 0.82 ? '121,185,106' : particle.tint < 0.16 ? '166,216,103' : '78,123,61';
         context.beginPath();
         context.fillStyle = `rgba(${tint},${particle.alpha})`;
         context.arc(x, y, particle.size * particle.depth, 0, Math.PI * 2);

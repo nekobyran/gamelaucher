@@ -28,6 +28,7 @@ const js = await readFile(resolve(root, 'app.js'), 'utf8');
 const css = await readFile(resolve(root, 'styles.css'), 'utf8');
 const workflow = await readFile(resolve(root, '.github/workflows/deploy-release-site.yml'), 'utf8');
 const publishScript = await readFile(resolve(root, 'command/Publish-StaticReleaseSite.ps1'), 'utf8');
+const buildScript = await readFile(resolve(root, 'tools/build-site.mjs'), 'utf8');
 
 check(/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(config.projectSlug), 'projectSlug must be a valid DNS label');
 check(config.customDomain === `${config.projectSlug}.nkbr.cc`, 'customDomain must equal <projectSlug>.nkbr.cc');
@@ -35,30 +36,45 @@ check(config.pagesProject === `nkbr-${config.projectSlug}`, 'pagesProject must e
 check(config.githubRepo === 'nekobyran/gamelaucher', 'unexpected githubRepo');
 check(config.productionBranch === 'main', 'productionBranch must be main');
 check(release.schemaVersion === 1, 'release schemaVersion must be 1');
-check(Array.isArray(release.platforms) && release.platforms.length === 2, 'release must expose exactly Windows and Android previews');
+check(Array.isArray(release.platforms) && release.platforms.length === 2, 'release must expose exactly Windows and Android builds');
 check(new Set(release.platforms.map((item) => item.id)).size === release.platforms.length, 'platform ids must be unique');
-check(release.platforms.some((item) => item.id === 'windows'), 'Windows preview missing');
-check(release.platforms.some((item) => item.id === 'android'), 'Android preview missing');
+check(release.platforms.some((item) => item.id === 'windows'), 'Windows build missing');
+check(release.platforms.some((item) => item.id === 'android'), 'Android build missing');
 
 for (const platform of release.platforms) {
-  check(/^[A-F0-9]{64}$/.test(platform.sha256), `${platform.id}: invalid SHA-256`);
-  check(platform.downloadUrl.startsWith('https://github.com/nekobyran/gamelaucher/releases'), `${platform.id}: downloads must stay on the private GitHub Release`);
+  check(platform.sha256 === '—', `${platform.id}: source template must not pin a stale SHA-256`);
+  check(platform.downloadUrl === null, `${platform.id}: source template must not pin a release asset URL`);
   check(Array.isArray(platform.installSteps) && platform.installSteps.length >= 3, `${platform.id}: installSteps incomplete`);
 }
+check(release.release.releasePageUrl === 'https://github.com/nekobyran/gamelaucher/releases', 'source release fallback must target the repository Releases page');
+check(release.release.discovery === 'build-time-gh', 'source release discovery contract is missing');
 
-for (const id of ['starfield', 'motionToggle', 'release', 'platformChecksum', 'verifiedList', 'pendingList']) {
+for (const id of ['starfield', 'motionToggle', 'release', 'scope', 'platformChecksum']) {
   check(html.includes(`id="${id}"`), `required DOM id missing: ${id}`);
 }
 check(html.includes('aria-live="polite"'), 'live release status missing');
 check(!/<script[^>]+src=["']https?:/i.test(html), 'remote scripts are forbidden');
 check(!/<link[^>]+href=["']https?:/i.test(html), 'remote styles and fonts are forbidden');
+for (const forbidden of ['PRIVATE PREVIEW', 'READY FOR INVITED TESTERS', 'verifiedList', 'pendingList', 'smoke', '受邀测试者']) {
+  check(!html.includes(forbidden) && !js.includes(forbidden), `internal preview/testing marker remains: ${forbidden}`);
+}
+check(html.includes('LICENSE NOT DECLARED'), 'license boundary is missing');
+check(html.includes('https://github.com/nekobyran/gamelaucher'), 'private repository link is missing');
 check(js.includes('visibilitychange'), 'animation must pause when the page is hidden');
 check(js.includes('prefers-reduced-motion'), 'reduced-motion JavaScript handling missing');
-check(js.includes("width < 720 ? 1.25 : 1.8"), 'mobile DPR limit missing');
+check(js.includes('saveData') && js.includes('navigator.connection'), 'save-data motion fallback missing');
+check(js.includes('revealAll') && js.includes('revealObserver.disconnect'), 'reveal timeout fallback missing');
+check(js.includes('lowPower ? 1'), 'low-power DPR limit missing');
 check(css.includes('@media (prefers-reduced-motion:reduce)'), 'reduced-motion CSS missing');
+check(css.includes('#f7faef') && css.includes('#173329') && css.includes('#a6d867'), 'paper-white botanical-green palette missing');
+check(html.includes('class="nkbr-support"') && html.includes('./assets/sponsor.jpg'), 'unified sponsor section missing');
 check(workflow.includes('CLOUDFLARE_API_TOKEN') && workflow.includes('CLOUDFLARE_ACCOUNT_ID'), 'Cloudflare workflow secret bindings missing');
 check(publishScript.includes('$expectedDomain'), 'domain format validation missing in publish script');
+check(publishScript.includes('tools\\build-site.mjs'), 'publish script must use the generated release manifest build');
 check(publishScript.includes('wrangler@latest'), 'Wrangler deployment entry missing');
+check(buildScript.includes("['api', `repos/${config.githubRepo}/releases?per_page=20`]") && buildScript.includes('browser_download_url'), 'authenticated GitHub release discovery missing');
+check(buildScript.includes('draft !== true') && buildScript.includes('build-time-gh-fallback'), 'private release fail-closed policy missing');
+check(!/releases\/download\//iu.test(await readFile(resolve(root, 'release.json'), 'utf8')), 'source release template pins a fixed asset URL');
 
 const sensitivePrefix = /(ghp_|github_pat_|sk-[A-Za-z0-9]{20,})/;
 for (const [name, text] of [['index.html', html], ['app.js', js], ['workflow', workflow], ['publish script', publishScript]]) {

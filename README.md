@@ -1,9 +1,9 @@
-# GameLauncher Private Preview
+# GameLauncher Private Release
 
-Private preview release metadata and the production static release site for GameLauncher.
+Private release release metadata and the production static release site for GameLauncher.
 
-- Production domain: `gamelaucher.nkbr.cc`
-- Cloudflare Pages project: `nkbr-gamelaucher`
+- Production domain: `gamelauncher.nkbr.cc`
+- Cloudflare Pages project: `nkbr-gamelauncher`
 - Hosting model: static assets only; no Pages Functions
 - Downloads: private GitHub Releases; invited GitHub accounts must sign in
 
